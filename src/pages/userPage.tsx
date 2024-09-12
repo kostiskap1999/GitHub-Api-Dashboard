@@ -1,44 +1,28 @@
 import { useEffect, useState } from 'react';
-import '../styles/App.scss';
+import '../styles/general.scss';
 import { getGithubUsers } from '../api/userApi';
 import { UserModel } from '../model/userModel';
 
-export default function App() {
+interface UserPageProps {
+  search: string
+}
+
+export default function UserPage({search}: UserPageProps) {
 
   const [user, setUser] = useState<UserModel | null>(null)
-  const [search, setSearch] = useState<string>('')
 
   useEffect(() => {
-    const loadAsyncData = async () => {
-      console.log(process.env.REACT_APP_HOSTNAME)
-      // let u: UserModel = new UserModel() //await getGithubUsers('kostiskap1999')
-      // setUser(u)
+    const loadData = async () => {
+      search &&
+        setUser(new UserModel(await getGithubUsers(search)))
     }
-    loadAsyncData()
-  }, [])
-
-  const handleSearch = async () => {
-    let u: UserModel = new UserModel(await getGithubUsers(search))
-    setUser(u)
-  }
-
-  const clearSearch = async () => {
-    setSearch('')
-    setUser(null)
-  }
+    loadData()
+  }, [search])
 
   return (
     <div className="App">
-      <input
-        type="text"
-        placeholder="Enter a username to show information"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-      <button onClick={handleSearch}>Search</button>
-      <button onClick={clearSearch}>Clear Search</button>
 
-      {user && 
+      {user ? 
         <div className="row">
           <div>
             <span>Username</span>
@@ -60,10 +44,17 @@ export default function App() {
             <span>Bio</span>
             <span>{user.bio}</span>
           </div>
-
-          
+          <div>
+            <span>Number of Followers</span>
+            <span>{user.followers}</span>
+          </div>
+          <div>
+            <span>Public Repos</span>
+            <span>{user.public_repos}</span>
+          </div>
         </div>
-      }
+    : <div>Search a user and their info will appear here.</div>
+    }
     </div>
   )
 }
