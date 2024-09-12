@@ -1,49 +1,61 @@
 import { useEffect, useState } from 'react';
 import '../styles/general.scss';
-import { getGithubUsers } from '../api/userApi';
-import { UserModel } from '../model/userModel';
+import { getGithubUserFollowers } from '../api/userApi';
+import { FollowersModel } from '../model/followersModel';
 
-interface UserPageProps {
+interface Props {
   search: string
 }
 
-export default function FollowersPage({search}: UserPageProps) {
-  const user = new UserModel()
+export default function ReposPage({search}: Props) {
+  
+  const [repos, setRepos] = useState<FollowersModel | null>(null)
+
+  useEffect(() => {
+    const loadData = async () => {
+      search &&
+        setRepos(new FollowersModel(await getGithubUserFollowers(search)))
+    }
+    loadData()
+  }, [search])
+
   return (
     <div className="App">
-      {user && 
+
+      {repos ? 
         <div className="row">
           <div>
             <span>Username</span>
-            <span>{user.login}</span>
+            <span>{repos.login}</span>
           </div>
           <div>
             <span>Name</span>
-            <span>{user.name}</span>
+            <span>{repos.name}</span>
           </div>
           <div>
             <span>Avatar URL</span>
-            <span><img src={user.avatar_url ? user.avatar_url : ""}  alt="User Avatar" style={{maxHeight: '100px', maxWidth: '100px'}} /></span>
+            <span><img src={repos.avatar_url ? repos.avatar_url : ""}  alt="User Avatar" style={{maxHeight: '100px', maxWidth: '100px'}} /></span>
           </div>
           <div>
             <span>Location</span>
-            <span>{user.location}</span>
+            <span>{repos.location}</span>
           </div>
           <div>
             <span>Bio</span>
-            <span>{user.bio}</span>
+            <span>{repos.bio}</span>
           </div>
           <div>
             <span>Number of Followers</span>
-            <span>{user.followers}</span>
+            <span>{repos.followers}</span>
           </div>
           <div>
             <span>Public Repos</span>
-            <span>{user.public_repos}</span>
+            <span>{repos.public_repos}</span>
           </div>
 
         </div>
-      }
+    : <div>Search a user and their repositories will appear here.</div>
+    }
     </div>
   )
 }

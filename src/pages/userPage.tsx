@@ -3,11 +3,11 @@ import '../styles/general.scss';
 import { getGithubUsers } from '../api/userApi';
 import { UserModel } from '../model/userModel';
 
-interface UserPageProps {
+interface Props {
   search: string
 }
 
-export default function UserPage({search}: UserPageProps) {
+export default function UserPage({search}: Props) {
 
   const [user, setUser] = useState<UserModel | null>(null)
 

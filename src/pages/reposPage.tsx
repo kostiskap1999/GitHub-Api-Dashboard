@@ -1,51 +1,75 @@
 import { useEffect, useState } from 'react';
 import '../styles/general.scss';
-import { getGithubUsers } from '../api/userApi';
+import { getGithubUserRepos } from '../api/userApi';
+import { IRepos, ReposModel } from '../model/repoModel';
 import { UserModel } from '../model/userModel';
 
-interface UserPageProps {
+interface Props {
   search: string
 }
 
-export default function ReposPage({search}: UserPageProps) {
-  const user = new UserModel()
+export default function ReposPage({search}: Props) {
+  
+  const [owner, setOwner] = useState<UserModel | null>(null)
+  const [repos, setRepos] = useState<ReposModel[] | null>(null)
+
+  useEffect(() => {
+    const loadData = async () => {
+      if(search){
+        let reposList = await getGithubUserRepos(search)
+        reposList.forEach((repo: IRepos) => {
+          new ReposModel(repo)
+        })
+      
+        setRepos(reposList)
+        console.log(reposList[0].owner)
+        setOwner(reposList[0].owner)
+      }
+        
+    }
+    loadData()
+  }, [search])
+
+
+  const sortRepos = (order: 'asc' | 'desc') => {
+    if(!repos)
+      return
+
+    const sortedRepos = [ ...repos].sort((a, b) => {
+      const countA = a.stargazers_count ?? 0
+      const countB = b.stargazers_count ?? 0
+      if (order === 'asc') {
+        return countA - countB
+      } else {
+        return countB - countA
+      }
+    })
+    setRepos(sortedRepos)
+  }
+
   return (
     <div className="App">
-
-      {user ? 
-        <div className="row">
-          <div>
-            <span>Username</span>
-            <span>{user.login}</span>
-          </div>
-          <div>
-            <span>Name</span>
-            <span>{user.name}</span>
-          </div>
-          <div>
-            <span>Avatar URL</span>
-            <span><img src={user.avatar_url ? user.avatar_url : ""}  alt="User Avatar" style={{maxHeight: '100px', maxWidth: '100px'}} /></span>
-          </div>
-          <div>
-            <span>Location</span>
-            <span>{user.location}</span>
-          </div>
-          <div>
-            <span>Bio</span>
-            <span>{user.bio}</span>
-          </div>
-          <div>
-            <span>Number of Followers</span>
-            <span>{user.followers}</span>
-          </div>
-          <div>
-            <span>Public Repos</span>
-            <span>{user.public_repos}</span>
-          </div>
-
+      {repos && owner ? 
+        <div>
+          <h1>{owner.login}'s Repositories</h1>
+          <button onClick={() => sortRepos('asc')}>
+            Sort by Stars Ascending
+          </button>
+          <button onClick={() => sortRepos('desc')}>
+            Sort by Stars Descending
+          </button>
+          <ul>
+            {repos.map((repo) => (
+              <li key={repo.id}>
+                <h3>{repo.name}</h3>
+                <p>{repo.description}</p>
+                <p>⭐ {repo.stargazers_count}</p>
+              </li>
+            ))}
+          </ul>
         </div>
-    : <div>Didn't search a user? Search a user and their info will appear here.</div>
-    }
+      : <div>Search a user and their repositories will appear here.</div>
+     }
     </div>
   )
 }
