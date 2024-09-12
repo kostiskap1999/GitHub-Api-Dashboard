@@ -39,5 +39,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "ajv": "^7.2.4",
+    "resolve-url-loader": "^5.0.0",
+    "sass": "^1.78.0"
   }
 }
