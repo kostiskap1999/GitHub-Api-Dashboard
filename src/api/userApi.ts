@@ -1,12 +1,15 @@
 import { errorHandling } from "../errorHandling"
 
 export async function getGithubUsers(username: string) {
+    const headers: HeadersInit = {}
+
+    if (process.env.REACT_APP_TOKEN)
+        headers.Authorization = `token ${process.env.REACT_APP_TOKEN}`
+
     return await fetch(`https://api.github.com/users/${username}`,
         {
             method: 'GET',
-            headers: {
-                Authorization: `token ${process.env.REACT_APP_TOKEN}`
-            }
+            headers
         })
     .then((response) => {
         if(response.ok)
@@ -18,12 +21,15 @@ export async function getGithubUsers(username: string) {
 }
 
 export async function getGithubUserRepos(username: string, page: number = 1) {
+    const headers: HeadersInit = {}
+
+    if (process.env.REACT_APP_TOKEN)
+        headers.Authorization = `token ${process.env.REACT_APP_TOKEN}`
+
     return await fetch(`https://api.github.com/users/${username}/repos?page=${page}&per_page=30`,
         {
             method: 'GET',
-            headers: {
-                Authorization: `token ${process.env.REACT_APP_TOKEN}`
-            }
+            headers
         })
     .then((response) => {
         if(response.ok)
@@ -35,12 +41,15 @@ export async function getGithubUserRepos(username: string, page: number = 1) {
 }
 
 export async function getGithubUserFollowers(username: string, page: number = 1) {
+    const headers: HeadersInit = {}
+
+    if (process.env.REACT_APP_TOKEN)
+        headers.Authorization = `token ${process.env.REACT_APP_TOKEN}`
+
     return await fetch(`https://api.github.com/users/${username}/followers?page=${page}&per_page=30`,
         {
             method: 'GET',
-            headers: {
-                Authorization: `token ${process.env.REACT_APP_TOKEN}`
-            }
+            headers
         })
     .then((response) => {
         if(response.ok)
