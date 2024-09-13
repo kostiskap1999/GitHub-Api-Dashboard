@@ -1,4 +1,6 @@
 export function errorHandling(error: Error) {
+    if (error.message === '401')
+        alert('API token expired.')
     if (error.message === '403')
         alert('Too many unauthorized API requests. Try refreshing your token.')
     else if (error.message === '429')
