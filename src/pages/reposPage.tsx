@@ -33,7 +33,7 @@ export default function ReposPage({userProp}: Props) {
     }
 
     loadData()
-  }, [userProp, page])
+  }, [userProp, page, hasMore])
 
 
   useEffect(() => {

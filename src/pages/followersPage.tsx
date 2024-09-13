@@ -28,11 +28,11 @@ export default function FollowersPage({userProp}: Props) {
           setFollowers((prevFollowers) => [...prevFollowers, ...followersList])
         }
         else
-          setHasMore(false)          
+          setHasMore(false)
       }
     }
     loadData()
-  }, [userProp, page])
+  }, [userProp, page, hasMore])
 
   useEffect(() => {
     const handleScroll = () => {
