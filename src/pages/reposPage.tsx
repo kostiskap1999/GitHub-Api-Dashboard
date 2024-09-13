@@ -17,12 +17,14 @@ export default function ReposPage({userProp}: Props) {
     const loadData = async () => {
       if(userProp){
         let reposList = await getGithubUserRepos(userProp.login ? userProp.login : '')
-        reposList.forEach((repo: IRepos) => {
-          new ReposModel(repo)
-        })
-      
-        setRepos(reposList)
-        setUser(userProp)
+        if(reposList){
+          reposList.forEach((repo: IRepos) => {
+            new ReposModel(repo)
+          })
+        
+          setRepos(reposList)
+          setUser(userProp)
+        }
       }
     }
     loadData()

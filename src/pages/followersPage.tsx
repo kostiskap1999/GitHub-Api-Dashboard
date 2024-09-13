@@ -17,12 +17,15 @@ export default function FollowersPage({userProp}: Props) {
     const loadData = async () => {
       if(userProp){
         let followersList = await getGithubUserFollowers(userProp.login ? userProp.login : '')
-        followersList.forEach((follower: IUser) => {
-          new UserModel(follower)
-        })
+        if(followersList){
+          followersList.forEach((follower: IUser) => {
+            new UserModel(follower)
+          })
       
-        setFollowers(followersList)
-        setUser(userProp)
+          setFollowers(followersList)
+          setUser(userProp)
+        }
+          
       }
     }
     loadData()

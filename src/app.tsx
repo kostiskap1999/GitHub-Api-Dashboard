@@ -8,14 +8,14 @@ import ReposPage from './pages/reposPage';
 
 function App() {
   const [inputValue, setInputValue] = useState<string>('')
-  const [search, setSearch] = useState<string>('')
   const [user, setUser] = useState<UserModel | null>(null)
 
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setSearch(inputValue)
-    setUser(new UserModel(await getGithubUsers(inputValue)))
+    let search = await getGithubUsers(inputValue)
+    if(search)
+      setUser(new UserModel(search))
   }
 
   return (<>

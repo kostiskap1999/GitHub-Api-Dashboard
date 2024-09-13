@@ -1,3 +1,5 @@
+import { errorHandling } from "../errorHandling"
+
 export async function getGithubUsers(username: string) {
     return await fetch(`https://api.github.com/users/${username}`,
         {
@@ -7,14 +9,12 @@ export async function getGithubUsers(username: string) {
             }
         })
     .then((response) => {
-        if(!response.ok)
-            throw new Error(JSON.stringify(response.status))
-        else
+        if(response.ok)
             return response.json()
+        else
+            throw new Error(JSON.stringify(response.status))
     })
-    .catch((error) => {
-        console.error(error)
-    })
+    .catch(errorHandling)
 }
 
 export async function getGithubUserRepos(username: string) {
@@ -26,14 +26,12 @@ export async function getGithubUserRepos(username: string) {
             }
         })
     .then((response) => {
-        if(!response.ok)
-            throw new Error(JSON.stringify(response.status))
-        else
+        if(response.ok)
             return response.json()
+        else
+            throw new Error(JSON.stringify(response.status))
     })
-    .catch((error) => {
-        console.error(error)
-    })
+    .catch(errorHandling)
 }
 
 export async function getGithubUserFollowers(username: string) {
@@ -45,12 +43,11 @@ export async function getGithubUserFollowers(username: string) {
             }
         })
     .then((response) => {
-        if(!response.ok)
-            throw new Error(JSON.stringify(response.status))
-        else
+        if(response.ok)
             return response.json()
+        else
+            throw new Error(JSON.stringify(response.status))
+            
     })
-    .catch((error) => {
-        console.error(error)
-    })
+    .catch(errorHandling)
 }
