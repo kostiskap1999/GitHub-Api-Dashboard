@@ -5,30 +5,28 @@ import { IRepos, ReposModel } from '../model/repoModel';
 import { UserModel } from '../model/userModel';
 
 interface Props {
-  search: string
+  userProp?: UserModel | null
 }
 
-export default function ReposPage({search}: Props) {
+export default function ReposPage({userProp}: Props) {
   
-  const [owner, setOwner] = useState<UserModel | null>(null)
+  const [user, setUser] = useState<UserModel | null>(null)
   const [repos, setRepos] = useState<ReposModel[] | null>(null)
 
   useEffect(() => {
     const loadData = async () => {
-      if(search){
-        let reposList = await getGithubUserRepos(search)
+      if(userProp){
+        let reposList = await getGithubUserRepos(userProp.login ? userProp.login : '')
         reposList.forEach((repo: IRepos) => {
           new ReposModel(repo)
         })
       
         setRepos(reposList)
-        console.log(reposList[0].owner)
-        setOwner(reposList[0].owner)
+        setUser(userProp)
       }
-        
     }
     loadData()
-  }, [search])
+  }, [userProp])
 
 
   const sortRepos = (order: 'asc' | 'desc') => {
@@ -49,9 +47,9 @@ export default function ReposPage({search}: Props) {
 
   return (
     <div className="App">
-      {repos && owner ? 
+      {repos && user ? 
         <div>
-          <h1>{owner.login}'s Repositories</h1>
+          <h1>{user.login}'s Repositories</h1>
           <button onClick={() => sortRepos('asc')}>
             Sort by Stars Ascending
           </button>

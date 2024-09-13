@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import UserPage from './pages/userPage';
 import FollowersPage from './pages/followersPage';
@@ -7,12 +7,15 @@ import { getGithubUsers } from './api/userApi';
 import ReposPage from './pages/reposPage';
 
 function App() {
-  const [inputValue, setInputValue] = useState<string>('');
+  const [inputValue, setInputValue] = useState<string>('')
   const [search, setSearch] = useState<string>('')
+  const [user, setUser] = useState<UserModel | null>(null)
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setSearch(inputValue);
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setSearch(inputValue)
+    setUser(new UserModel(await getGithubUsers(inputValue)))
   }
 
   return (<>
@@ -32,7 +35,7 @@ function App() {
       </nav>
 
       <div className="App">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={async (e: FormEvent<HTMLFormElement>) => await handleSubmit(e)}>
         <input
           type="text"
           placeholder="Enter a username to show information"
@@ -45,9 +48,9 @@ function App() {
 
 
       <Routes>
-        <Route path="/" element={<UserPage search={search} />} />
-        <Route path="/repos" element={<ReposPage search={search} />} />
-        <Route path="/followers" element={<FollowersPage search={search} />} />
+        <Route path="/" element={<UserPage userProp={user} />} />
+        <Route path="/repos" element={<ReposPage userProp={user} />} />
+        <Route path="/followers" element={<FollowersPage userProp={user} />} />
       </Routes>
     </Router>
     

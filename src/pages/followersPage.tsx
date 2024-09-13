@@ -1,60 +1,48 @@
 import { useEffect, useState } from 'react';
 import '../styles/general.scss';
 import { getGithubUserFollowers } from '../api/userApi';
-import { FollowersModel } from '../model/followersModel';
+import { IUser, UserModel } from '../model/userModel';
+import UserPage from './userPage';
 
 interface Props {
-  search: string
+  userProp?: UserModel | null
 }
 
-export default function ReposPage({search}: Props) {
+export default function FollowersPage({userProp}: Props) {
   
-  const [repos, setRepos] = useState<FollowersModel | null>(null)
+  const [followers, setFollowers] = useState<UserModel[] | null>(null)
+  const [user, setUser] = useState<UserModel | null>(null)
 
   useEffect(() => {
     const loadData = async () => {
-      search &&
-        setRepos(new FollowersModel(await getGithubUserFollowers(search)))
+      if(userProp){
+        let followersList = await getGithubUserFollowers(userProp.login ? userProp.login : '')
+        followersList.forEach((follower: IUser) => {
+          new UserModel(follower)
+        })
+      
+        setFollowers(followersList)
+        setUser(userProp)
+      }
     }
     loadData()
-  }, [search])
+  }, [userProp])
 
   return (
     <div className="App">
 
-      {repos ? 
-        <div className="row">
-          <div>
-            <span>Username</span>
-            <span>{repos.login}</span>
-          </div>
-          <div>
-            <span>Name</span>
-            <span>{repos.name}</span>
-          </div>
-          <div>
-            <span>Avatar URL</span>
-            <span><img src={repos.avatar_url ? repos.avatar_url : ""}  alt="User Avatar" style={{maxHeight: '100px', maxWidth: '100px'}} /></span>
-          </div>
-          <div>
-            <span>Location</span>
-            <span>{repos.location}</span>
-          </div>
-          <div>
-            <span>Bio</span>
-            <span>{repos.bio}</span>
-          </div>
-          <div>
-            <span>Number of Followers</span>
-            <span>{repos.followers}</span>
-          </div>
-          <div>
-            <span>Public Repos</span>
-            <span>{repos.public_repos}</span>
-          </div>
+      {followers && user ? 
+        <div>
+          <h1>{user.login}'s Followers</h1>
+          <div>{user.login}'s Total Followers are {user.followers}</div>
+          <ul>
+            {followers.map((follower) => (
+              <UserPage userProp={follower} />
+            ))}
+          </ul>
 
         </div>
-    : <div>Search a user and their repositories will appear here.</div>
+    : <div>Search a user and their followers will appear here.</div>
     }
     </div>
   )
