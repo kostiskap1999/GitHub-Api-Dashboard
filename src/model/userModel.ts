@@ -7,6 +7,8 @@ export interface IUser {
     bio: string | null,
     public_repos: number | null
     followers: number | null
+    html_url: string | null
+
 }
 
 export class UserModel implements IUser {
@@ -18,6 +20,8 @@ export class UserModel implements IUser {
     bio: string | null
     public_repos: number | null
     followers: number | null
+    html_url: string | null
+
 
     constructor(user: IUser = {} as IUser) {
         this.login = user.login
@@ -28,5 +32,6 @@ export class UserModel implements IUser {
         this.bio = user.bio
         this.public_repos = user.public_repos
         this.followers = user.followers
+        this.html_url = user.html_url
     }
 }

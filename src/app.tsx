@@ -5,6 +5,8 @@ import FollowersPage from './pages/followersPage';
 import { UserModel } from './model/userModel';
 import { getGithubUsers } from './api/userApi';
 import ReposPage from './pages/reposPage';
+import './styles/general.scss';
+
 
 function App() {
   const [inputValue, setInputValue] = useState<string>('')
@@ -19,34 +21,24 @@ function App() {
   }
 
   return (<>
+    <form className="search-bar" onSubmit={async (e: FormEvent<HTMLFormElement>) => await handleSubmit(e)}>
+      <div style={{marginBottom: "10px"}}>Welcome to GitHub User Search. Type a GitHub user's username.</div>
+      <input
+        type="text"
+        placeholder="Enter a username"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+      />
+      <button type="submit">Search</button>
+    </form>
+
+
     <Router>
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">User</Link>
-          </li>
-          <li>
-            <Link to="/repos">Repositories</Link>
-          </li>
-          <li>
-            <Link to="/followers">Followers</Link>
-          </li>
-        </ul>
-      </nav>
-
-      <div className="App">
-      <form onSubmit={async (e: FormEvent<HTMLFormElement>) => await handleSubmit(e)}>
-        <input
-          type="text"
-          placeholder="Enter a username to show information"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-        />
-        <button type="submit">Search</button>
-      </form>
+      <div className='row'>
+        <Link to="/">User</Link>
+        <Link to="/repos">Repositories</Link>
+        <Link to="/followers">Followers</Link>
       </div>
-
-
       <Routes>
         <Route path="/" element={<UserPage userProp={user} />} />
         <Route path="/repos" element={<ReposPage userProp={user} />} />

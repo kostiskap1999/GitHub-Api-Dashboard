@@ -6,6 +6,7 @@ export interface IRepos {
     owner: UserModel | null,
     description: string | null,
     stargazers_count: number | null
+    html_url: string | null
 }
 
 export class ReposModel implements IRepos {
@@ -14,6 +15,7 @@ export class ReposModel implements IRepos {
     owner: UserModel | null
     description: string | null
     stargazers_count: number | null
+    html_url: string | null
 
     constructor(repo: IRepos = {} as IRepos) {
         this.id = repo.id
@@ -21,5 +23,6 @@ export class ReposModel implements IRepos {
         this.owner = repo.owner
         this.description = repo.description
         this.stargazers_count = repo.stargazers_count
+        this.html_url = repo.html_url
     }
 }

@@ -1,18 +1,53 @@
-
-.App {
+.center {
+	margin: 25px 0 15px 0;
 	text-align: center;
+}
+
+.search-bar {
+	margin: 25px 0 15px 0;
+	text-align: center;
+}
+
+.button {
+	height: 20px;
+	width: 200px;
+	align-items: center;
+	justify-content: center;
+}
+
+.container {
+	border: 1px solid black;
+	padding: 20px;
+}
+
+.title {
+	font-size: large;
+	font-weight: bold;
+}
+
+.column {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
 }
 
 .row {
 	display: flex;
 	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
 	
-	> div {
+	> * {
 		display: flex;
+		align-items: center;
 		flex-direction: column;
-		flex: 1;
+		flex: 1 1 calc(33.33% - 20px);
+		margin: 10px;
 
-		> span {
+		> * {
 			&:first-child{
 				font-weight: bold;
 				margin-bottom: 10px;

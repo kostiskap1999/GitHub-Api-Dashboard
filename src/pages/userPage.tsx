@@ -15,14 +15,14 @@ export default function UserPage({userProp}: Props) {
     const loadData = async () => {
       if(userProp)
         setUser(userProp)
+        
     }
     loadData()
   }, [userProp])
 
 
   return (
-    <div className="App">
-
+    <div className='container'>
       {user ? 
         <div className="row">
           {user.login &&
@@ -55,20 +55,23 @@ export default function UserPage({userProp}: Props) {
               <span>{user.bio}</span>
             </div>
           }
-          {user.followers &&
+          {user.followers != null &&
             <div>
               <span>Number of Followers</span>
               <span>{user.followers}</span>
             </div>
           }
-          {user.public_repos &&
+          {user.public_repos != null &&
             <div>
               <span>Public Repos</span>
               <span>{user.public_repos}</span>
             </div>
           }
+          {user.html_url &&
+            <button onClick={() => user.html_url && window.open(user.html_url, '_blank')}>Visit profile</button>
+          }
         </div>
-    : <div>Search a user and their info will appear here.</div>
+    : <div className='row'>Search a user and their info will appear here.</div>
     }
     </div>
   )

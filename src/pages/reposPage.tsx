@@ -11,25 +11,47 @@ interface Props {
 export default function ReposPage({userProp}: Props) {
   
   const [user, setUser] = useState<UserModel | null>(null)
-  const [repos, setRepos] = useState<ReposModel[] | null>(null)
+  const [repos, setRepos] = useState<ReposModel[]>([])
+  
+  // Implementing pagination
+  const [page, setPage] = useState(1)
+  const [hasMore, setHasMore] = useState(true)
 
   useEffect(() => {
     const loadData = async () => {
-      if(userProp){
-        let reposList = await getGithubUserRepos(userProp.login ? userProp.login : '')
-        if(reposList){
-          reposList.forEach((repo: IRepos) => {
-            new ReposModel(repo)
-          })
+      if (userProp){
+        setUser(userProp)
+        const reposList = await getGithubUserRepos(userProp.login || '', page)
         
-          setRepos(reposList)
-          setUser(userProp)
+        if (reposList && reposList.length > 0){
+          reposList.forEach((repo: IRepos) => { new ReposModel(repo) })
+          setRepos((prevRepos) => [...prevRepos, ...reposList])
         }
+        else
+          setHasMore(false)
       }
     }
-    loadData()
-  }, [userProp])
 
+    loadData()
+  }, [userProp, page])
+
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight)
+        return
+      
+      setPage(prevPage => prevPage + 1)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [page])
+
+
+  const loadMore = () => {
+    setPage((prevPage) => prevPage + 1)
+  }
 
   const sortRepos = (order: 'asc' | 'desc') => {
     if(!repos)
@@ -48,25 +70,35 @@ export default function ReposPage({userProp}: Props) {
   }
 
   return (
-    <div className="App">
+    <div>
       {repos && user ? 
         <div>
           <h1>{user.login}'s Repositories</h1>
-          <button onClick={() => sortRepos('asc')}>
-            Sort by Stars Ascending
-          </button>
-          <button onClick={() => sortRepos('desc')}>
-            Sort by Stars Descending
-          </button>
-          <ul>
+          <div className='row'>
+            <button className='button' onClick={() => sortRepos('asc')}>Sort by Stars Ascending</button>
+            <button className='button' onClick={() => sortRepos('desc')}>Sort by Stars Descending</button>
+          </div>
+          <div>
             {repos.map((repo) => (
-              <li key={repo.id}>
-                <h3>{repo.name}</h3>
-                <p>{repo.description}</p>
-                <p>⭐ {repo.stargazers_count}</p>
-              </li>
+              <div className='column container' key={repo.id}>
+                <div className='title'>{repo.name} <span>⭐{repo.stargazers_count}</span></div>
+                <span>{repo.description}</span>
+                {repo.html_url &&
+                  <button onClick={() => repo.html_url && window.open(repo.html_url, '_blank')}>Visit repository</button>
+                }
+                
+              </div>
             ))}
-          </ul>
+          </div>
+          {hasMore ?
+            <div className='row'>
+              <button onClick={() => loadMore()}>Load More</button>
+            </div>
+          :
+            <div className='row'>
+              No more repositories to load.
+            </div>
+          }
         </div>
       : <div>Search a user and their repositories will appear here.</div>
      }

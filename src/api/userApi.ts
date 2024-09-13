@@ -17,8 +17,8 @@ export async function getGithubUsers(username: string) {
     .catch(errorHandling)
 }
 
-export async function getGithubUserRepos(username: string) {
-    return await fetch(`https://api.github.com/users/${username}/repos`,
+export async function getGithubUserRepos(username: string, page: number = 1) {
+    return await fetch(`https://api.github.com/users/${username}/repos?page=${page}&per_page=30`,
         {
             method: 'GET',
             headers: {
@@ -34,8 +34,8 @@ export async function getGithubUserRepos(username: string) {
     .catch(errorHandling)
 }
 
-export async function getGithubUserFollowers(username: string) {
-    return await fetch(`https://api.github.com/users/${username}/followers`,
+export async function getGithubUserFollowers(username: string, page: number = 1) {
+    return await fetch(`https://api.github.com/users/${username}/followers?page=${page}&per_page=30`,
         {
             method: 'GET',
             headers: {
