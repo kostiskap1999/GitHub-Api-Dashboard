@@ -19,7 +19,7 @@ export default function FollowersPage({userProp}: Props) {
 
   useEffect(() => {
     const loadData = async () => {
-      if(userProp){
+      if(userProp && hasMore){
         setUser(userProp)
         let followersList = await getGithubUserFollowers(userProp.login || '', page)
         
@@ -55,8 +55,10 @@ export default function FollowersPage({userProp}: Props) {
     <div>
       {followers && user ? 
         <div>
-          <h1>{user.login}'s Followers</h1>
-          <div>{user.login}'s Total Followers are {user.followers}</div>
+          <div className='center'>
+            <div className='heading'>{user.login}'s Followers</div>
+            <div>{user.login}'s Total Followers are {user.followers}</div>
+          </div>
           <div>
             {followers.map((follower) => (
               <div>

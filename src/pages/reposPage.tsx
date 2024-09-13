@@ -19,10 +19,10 @@ export default function ReposPage({userProp}: Props) {
 
   useEffect(() => {
     const loadData = async () => {
-      if (userProp){
+      if (userProp && hasMore){
         setUser(userProp)
         const reposList = await getGithubUserRepos(userProp.login || '', page)
-        
+        console.log('a')
         if (reposList && reposList.length > 0){
           reposList.forEach((repo: IRepos) => { new ReposModel(repo) })
           setRepos((prevRepos) => [...prevRepos, ...reposList])
@@ -56,7 +56,6 @@ export default function ReposPage({userProp}: Props) {
   const sortRepos = (order: 'asc' | 'desc') => {
     if(!repos)
       return
-
     const sortedRepos = [ ...repos].sort((a, b) => {
       const countA = a.stargazers_count ?? 0
       const countB = b.stargazers_count ?? 0
@@ -66,6 +65,7 @@ export default function ReposPage({userProp}: Props) {
         return countB - countA
       }
     })
+    console.log(sortedRepos)
     setRepos(sortedRepos)
   }
 
@@ -73,7 +73,7 @@ export default function ReposPage({userProp}: Props) {
     <div>
       {repos && user ? 
         <div>
-          <h1>{user.login}'s Repositories</h1>
+          <div className='heading center'>{user.login}'s Repositories</div>
           <div className='row'>
             <button className='button' onClick={() => sortRepos('asc')}>Sort by Stars Ascending</button>
             <button className='button' onClick={() => sortRepos('desc')}>Sort by Stars Descending</button>
