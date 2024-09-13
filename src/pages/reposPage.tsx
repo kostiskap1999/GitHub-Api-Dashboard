@@ -22,7 +22,6 @@ export default function ReposPage({userProp}: Props) {
       if (userProp && hasMore){
         setUser(userProp)
         const reposList = await getGithubUserRepos(userProp.login || '', page)
-        console.log('a')
         if (reposList && reposList.length > 0){
           reposList.forEach((repo: IRepos) => { new ReposModel(repo) })
           setRepos((prevRepos) => [...prevRepos, ...reposList])
