@@ -19,8 +19,12 @@ export default function ReposPage({userProp}: Props) {
 
   useEffect(() => {
     const loadData = async () => {
+      if (userProp !== user){
+        setRepos([])
+        setHasMore(true)
+      }
+
       if (userProp && hasMore){
-        setUser(userProp)
         const reposList = await getGithubUserRepos(userProp.login || '', page)
         if (reposList && reposList.length > 0){
           reposList.forEach((repo: IRepos) => { new ReposModel(repo) })
@@ -28,6 +32,7 @@ export default function ReposPage({userProp}: Props) {
         }
         else
           setHasMore(false)
+        setUser(userProp)
       }
     }
 

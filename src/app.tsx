@@ -9,15 +9,24 @@ import './styles/general.scss';
 
 
 function App() {
+
+  const [lastInputValue, setLastInputValue] = useState('')
   const [inputValue, setInputValue] = useState<string>('')
+
   const [user, setUser] = useState<UserModel | null>(null)
 
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    let search = await getGithubUsers(inputValue)
-    if(search)
-      setUser(new UserModel(search))
+
+    if(inputValue == lastInputValue)
+      return
+      
+      setLastInputValue(inputValue)
+      let u = await getGithubUsers(inputValue)
+      if(u)
+        setUser(new UserModel(u))
+
   }
 
   return (<>

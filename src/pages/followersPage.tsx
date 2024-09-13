@@ -19,16 +19,20 @@ export default function FollowersPage({userProp}: Props) {
 
   useEffect(() => {
     const loadData = async () => {
+      if (userProp !== user){
+        setFollowers([])
+        setHasMore(true)
+      }
+
       if(userProp && hasMore){
-        setUser(userProp)
-        let followersList = await getGithubUserFollowers(userProp.login || '', page)
-        
+        const followersList = await getGithubUserFollowers(userProp.login || '', page)   
         if (followersList && followersList.length > 0){
           followersList.forEach((follower: IUser) => { new UserModel(follower) })
           setFollowers((prevFollowers) => [...prevFollowers, ...followersList])
         }
         else
           setHasMore(false)
+        setUser(userProp)
       }
     }
     loadData()
@@ -61,7 +65,7 @@ export default function FollowersPage({userProp}: Props) {
           </div>
           <div>
             {followers.map((follower) => (
-              <div>
+              <div  key={follower.id}>
                 <UserPage userProp={follower} />
               </div>
             ))}
