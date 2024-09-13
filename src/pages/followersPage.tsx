@@ -56,7 +56,7 @@ export default function FollowersPage({userProp}: Props) {
   }
 
   return (
-    <div>
+    <div className='container'>
       {followers && user ? 
         <div>
           <div className='center'>
@@ -80,7 +80,7 @@ export default function FollowersPage({userProp}: Props) {
             </div>
           }
         </div>
-    : <div>Search a user and their followers will appear here.</div>
+    : <div className='row'>Search a user and their followers will appear here.</div>
     }
     </div>
   )

@@ -22,10 +22,10 @@ function App() {
     if(inputValue == lastInputValue)
       return
       
-      setLastInputValue(inputValue)
-      let u = await getGithubUsers(inputValue)
-      if(u)
-        setUser(new UserModel(u))
+    setLastInputValue(inputValue)
+    let u = await getGithubUsers(inputValue)
+    if(u)
+      setUser(new UserModel(u))
 
   }
 

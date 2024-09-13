@@ -74,7 +74,7 @@ export default function ReposPage({userProp}: Props) {
   }
 
   return (
-    <div>
+    <div className='container'>
       {repos && user ? 
         <div>
           <div className='heading center'>{user.login}'s Repositories</div>
@@ -104,7 +104,7 @@ export default function ReposPage({userProp}: Props) {
             </div>
           }
         </div>
-      : <div>Search a user and their repositories will appear here.</div>
+      : <div className='row'>Search a user and their repositories will appear here.</div>
      }
     </div>
   )
